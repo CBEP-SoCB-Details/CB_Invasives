@@ -1,9 +1,7 @@
 
 # Data Sources
-
-The file "MIMIC_MASTER_DATA_Wells_033020.xls" received from Jeremy Miller of 
-Wells Reserve in an e-mail to Curtis C. Bohlen, dated April 4, 2020.
-
+The file "MIMIC_MASTER_DATA_Wells_0225210.xls" received from Jeremy Miller of 
+Wells Reserve in an e-mail to Curtis C. Bohlen, dated February 25, 2021.
 
 # Notes
 1.    Because this
