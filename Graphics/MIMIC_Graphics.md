@@ -452,6 +452,7 @@ ggplot(total_spp_long, aes(x = Where, y = Value, group = Order, fill = Type)) +
   scale_fill_manual(values = cbep_colors2()[c(2,4)], name = '') +
   guides(fill = guide_legend(override.aes = list(size = 0.75))) +
   
+  theme_cbep(base_size = 16) +
   theme(axis.text.x = element_text(#angle = 45, 
                                    size = 9, 
                                    #hjust = 1
@@ -514,23 +515,15 @@ effort %>%
   
   ylab('') +
   xlab('') +
-  ggtitle('Increaseing Effort')
-```
-
-<img src="MIMIC_Graphics_files/figure-gfm/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
-
-``` r
+ #ggtitle('Increaseing Effort') +
    
-  theme(legend.position = c(0.25, 0.8))
-#> List of 1
-#>  $ legend.position: num [1:2] 0.25 0.8
-#>  - attr(*, "class")= chr [1:2] "theme" "gg"
-#>  - attr(*, "complete")= logi FALSE
-#>  - attr(*, "validate")= logi TRUE
+  theme(legend.position = c(0.25, 0.8)) +
   
   ggsave('figures/sampling_effort_bars.pdf', device = cairo_pdf, 
        width = 5, height = 7)
 ```
+
+<img src="MIMIC_Graphics_files/figure-gfm/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
 
 ``` r
 effort %>%

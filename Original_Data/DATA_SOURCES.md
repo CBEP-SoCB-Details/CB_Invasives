@@ -3,6 +3,16 @@
 The file "MIMIC_MASTER_DATA_Wells_0225210.xls" received from Jeremy Miller of 
 Wells Reserve in an e-mail to Curtis C. Bohlen, dated February 25, 2021.
 
+The file "Maine_2020_MIMIC Sites_WellsNERR.kmz" contains geographic data 
+showing locations of monitoring locations inMaine, including the Casco Bay
+monitoring Sites.
+
+We extracted the Placemarks from the KML file in Python, and produced a
+CSV file, "Maine_2020_MIMIC Sites_WellsNERR.csv". It contains the same 
+geospatial data as teh KMZ, but in a more convenient tabular form.
+
+
+
 # Notes
 1.    Because this
       is a volunteer based effort, records are sometimes incomplete.
