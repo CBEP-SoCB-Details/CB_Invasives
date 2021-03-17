@@ -179,7 +179,8 @@ sort(unique(the_data$Species))
 
 So we have a couple of things to note:  
 1. Inconsistent coding of Membranipora  
-2. Inconsistent capitalization of Palaemon
+2. Inconsistent capitalization of Palaemon 3. “Colpomenia pereqrina” is
+misspelled , with a “Q” where it should have a “G”
 
 ### Abundance Levels
 
@@ -212,6 +213,9 @@ the_data <- the_data %>%
                            Species)) %>%
   mutate(Species = if_else(grepl('Palaemon ', Species, ignore.case = TRUE), 
                            'Palaemon elegans', 
+                           Species)) %>%
+  mutate(Species = if_else(grepl('Colpomenia ', Species, ignore.case = TRUE), 
+                           'Colpomenia peregrina', 
                            Species))
 ```
 
@@ -235,7 +239,7 @@ the_data <- the_data %>%
 sort(unique(the_data$Species))
 #>  [1] "Ascidiella aspersa"     "Botrylloides violaceus" "Botryllus schlosseri"  
 #>  [4] "Bugula neritina"        "Caprella mutica"        "Carcinus maenas"       
-#>  [7] "Codium fragile"         "Colpomenia pereqrina"   "Corella eumyota"       
+#>  [7] "Codium fragile"         "Colpomenia peregrina"   "Corella eumyota"       
 #> [10] "Diadumene lineata"      "Didemnum vexillum"      "Diplosoma listerianum" 
 #> [13] "Grateloupia turuturu"   "Hemigrapsus sanguineus" "Membranipora sp."      
 #> [16] "Ostrea edulis"          "Palaemon elegans"       "Styela clava"          
@@ -718,7 +722,7 @@ an estimate of relative abundance, if not, all we know is that the
 species was “present”.
 
 We will proceed to analyze these data principally via presence /
-absence, especially as relative abundances.
+absence, rather than as relative abundances.
 
 We create a presence / absence data layer. Basically, any row that
 remains in the data at this point indicated the species was “present”,
@@ -740,10 +744,12 @@ wide form, replace NAs, and pivot back to long form. The wide form data
 would be useful for ordination and other multivariate procedures, if we
 chose to pursue them.
 
-Note that this procedure retains any “real” NAs in the data, while it
-fills in values not present in the draft long data with “Absent”. This
-means we do not count data where species were recorded as present at
-all, which may not always be what we want.
+Note that this procedure retains any “real” NAs in the Abundance data,
+while it fills in values not present in the draft long data with
+“Absent”. This means we do not count data where species were recorded as
+“present”, which is probematic. A decision needs t be made on each
+specific analysis of the relative abundance data whether to replace
+those NAs with “Absent” or not.
 
 ``` r
 presence_data_wide <- the_data %>%
@@ -754,10 +760,9 @@ presence_data_wide <- the_data %>%
               values_fill = FALSE
               )
 
-
 abundance_data_wide <- the_data %>%
   select(-Present) %>%
-  mutate(Abundance = factor(Abundance, levels = c('Absent', 'Rare', 
+  mutate(Abundance = ordered(Abundance, levels = c('Absent', 'Rare', 
                                                   'Few', 'Common', 
                                                   'Abundant'))) %>%
   pivot_wider(-c(Weather, Comments), 
@@ -782,6 +787,8 @@ abundance_data <- abundance_data_wide %>%
 ```
 
 # Add Common Names
+
+It is convenient to have the common names included in these data, for
 
 ``` r
 names_data <- read_excel(fpath, sheet = 'Species List', skip = 1,
