@@ -32,10 +32,14 @@ Curtis C. Bohlen, Casco Bay Estuary Partnership
             Record](#first-duplicate-field-record)
         -   [Second Duplicate Field
             Record](#second-duplicate-field-record)
+        -   [Third Duplicate Field
+            Record](#third-duplicate-field-record)
 -   [Construct Presence / Absence
     Data](#construct-presence-absence-data)
 -   [Data Reorganization](#data-reorganization)
--   [Pivot Back to “Long” Data Format](#pivot-back-to-long-data-format)
+    -   [Pivot to “Wide” Data Format](#pivot-to-wide-data-format)
+    -   [Pivot Back to “Long” Data
+        Format](#pivot-back-to-long-data-format)
 -   [Add Common Names](#add-common-names)
 -   [Export Revised Data](#export-revised-data)
 
@@ -124,8 +128,9 @@ the_data <- read_excel(fpath, sheet = 'Master Data Record',
          Month = factor(Month, levels = 1:12, labels =  month.abb),
          Year = as.numeric(format(Date, format = '%Y'))) %>%
   filter(! is.na(Date)) %>%
-  rename(Salinity = `Salinty (ppt)`,   # Note spelling error
-         Temp     = `H20 temp C`)      # Note that's  H 2 zero,
+  rename(Salinity = `Salinty (ppt)`,      # Note spelling error
+         Temp     = `H20 temp C`)   %>%   # Note that's  H 2 zero,
+  select(-State)
 ```
 
 # Data on “Discontinued Sites”
@@ -415,24 +420,24 @@ the_data %>%
   filter(Year == 2010) %>%
   select(-Date, -Type, -City, -Weather, -`Salinity`, 
          -Temp)
-#> # A tibble: 15 x 8
-#>    Site       State Species         Abundance Comments        Month  Year Where 
-#>    <chr>      <chr> <chr>           <ord>     <chr>           <fct> <dbl> <chr> 
-#>  1 Siegel's ~ Maine Botrylloides v~ <NA>      No abundance r~ Jul    2010 Mainl~
-#>  2 Siegel's ~ Maine Carcinus maenas <NA>      No abundance r~ Jul    2010 Mainl~
-#>  3 SMCC Dock  Maine Ascidiella asp~ <NA>      No abundance r~ Jul    2010 Mainl~
-#>  4 SMCC Dock  Maine Hemigrapsus sa~ <NA>      No abundance r~ Jul    2010 Mainl~
-#>  5 Siegel's ~ Maine Botrylloides v~ <NA>      No abundance r~ Aug    2010 Mainl~
-#>  6 Siegel's ~ Maine Botryllus schl~ <NA>      No abundance r~ Aug    2010 Mainl~
-#>  7 Siegel's ~ Maine Carcinus maenas <NA>      No abundance r~ Aug    2010 Mainl~
-#>  8 SMCC Dock  Maine Ascidiella asp~ <NA>      No abundance r~ Aug    2010 Mainl~
-#>  9 SMCC Dock  Maine Botrylloides v~ <NA>      No abundance r~ Aug    2010 Mainl~
-#> 10 SMCC Dock  Maine Botryllus schl~ <NA>      No abundance r~ Aug    2010 Mainl~
-#> 11 SMCC Dock  Maine Carcinus maenas <NA>      No abundance r~ Aug    2010 Mainl~
-#> 12 Siegel's ~ Maine Botryllus schl~ <NA>      No abundance r~ Sep    2010 Mainl~
-#> 13 Siegel's ~ Maine Carcinus maenas <NA>      No abundance r~ Sep    2010 Mainl~
-#> 14 SMCC Dock  Maine Botrylloides v~ <NA>      No abundance r~ Sep    2010 Mainl~
-#> 15 SMCC Dock  Maine Botryllus schl~ <NA>      No abundance r~ Sep    2010 Mainl~
+#> # A tibble: 15 x 7
+#>    Site        Species           Abundance Comments          Month  Year Where  
+#>    <chr>       <chr>             <ord>     <chr>             <fct> <dbl> <chr>  
+#>  1 Siegel's R~ Botrylloides vio~ <NA>      No abundance rec~ Jul    2010 Mainla~
+#>  2 Siegel's R~ Carcinus maenas   <NA>      No abundance rec~ Jul    2010 Mainla~
+#>  3 SMCC Dock   Ascidiella asper~ <NA>      No abundance rec~ Jul    2010 Mainla~
+#>  4 SMCC Dock   Hemigrapsus sang~ <NA>      No abundance rec~ Jul    2010 Mainla~
+#>  5 Siegel's R~ Botrylloides vio~ <NA>      No abundance rec~ Aug    2010 Mainla~
+#>  6 Siegel's R~ Botryllus schlos~ <NA>      No abundance rec~ Aug    2010 Mainla~
+#>  7 Siegel's R~ Carcinus maenas   <NA>      No abundance rec~ Aug    2010 Mainla~
+#>  8 SMCC Dock   Ascidiella asper~ <NA>      No abundance rec~ Aug    2010 Mainla~
+#>  9 SMCC Dock   Botrylloides vio~ <NA>      No abundance rec~ Aug    2010 Mainla~
+#> 10 SMCC Dock   Botryllus schlos~ <NA>      No abundance rec~ Aug    2010 Mainla~
+#> 11 SMCC Dock   Carcinus maenas   <NA>      No abundance rec~ Aug    2010 Mainla~
+#> 12 Siegel's R~ Botryllus schlos~ <NA>      No abundance rec~ Sep    2010 Mainla~
+#> 13 Siegel's R~ Carcinus maenas   <NA>      No abundance rec~ Sep    2010 Mainla~
+#> 14 SMCC Dock   Botrylloides vio~ <NA>      No abundance rec~ Sep    2010 Mainla~
+#> 15 SMCC Dock   Botryllus schlos~ <NA>      No abundance rec~ Sep    2010 Mainla~
 ```
 
 It appears that no data in 2010 was collected with abundance data. (At
@@ -445,24 +450,24 @@ the_data %>%
   filter(Site == "Chebeague Stone Pier", Year == 2016) %>%
   select(-Type, -Year, -Site, -City, -Weather, -Salinity, 
          -Temp, -Comments)
-#> # A tibble: 15 x 6
-#>    Date                State Species                Abundance Month Where    
-#>    <dttm>              <chr> <chr>                  <ord>     <fct> <chr>    
-#>  1 2016-08-12 00:00:00 Maine Ascidiella aspersa     Few       Aug   Chebeague
-#>  2 2016-08-12 00:00:00 Maine Botrylloides violaceus Abundant  Aug   Chebeague
-#>  3 2016-08-12 00:00:00 Maine Botryllus schlosseri   Few       Aug   Chebeague
-#>  4 2016-08-12 00:00:00 Maine Caprella mutica        Common    Aug   Chebeague
-#>  5 2016-08-12 00:00:00 Maine Didemnum vexillum      Abundant  Aug   Chebeague
-#>  6 2016-08-12 00:00:00 Maine Membranipora sp.       Common    Aug   Chebeague
-#>  7 2016-08-19 00:00:00 Maine Botrylloides violaceus Few       Aug   Chebeague
-#>  8 2016-08-19 00:00:00 Maine Botryllus schlosseri   Rare      Aug   Chebeague
-#>  9 2016-08-19 00:00:00 Maine Didemnum vexillum      Common    Aug   Chebeague
-#> 10 2016-08-19 00:00:00 Maine Membranipora sp.       Abundant  Aug   Chebeague
-#> 11 2016-10-12 00:00:00 Maine Botrylloides violaceus <NA>      Oct   Chebeague
-#> 12 2016-10-12 00:00:00 Maine Botryllus schlosseri   <NA>      Oct   Chebeague
-#> 13 2016-10-12 00:00:00 Maine Caprella mutica        <NA>      Oct   Chebeague
-#> 14 2016-10-12 00:00:00 Maine Didemnum vexillum      <NA>      Oct   Chebeague
-#> 15 2016-10-12 00:00:00 Maine Membranipora sp.       <NA>      Oct   Chebeague
+#> # A tibble: 15 x 5
+#>    Date                Species                Abundance Month Where    
+#>    <dttm>              <chr>                  <ord>     <fct> <chr>    
+#>  1 2016-08-12 00:00:00 Ascidiella aspersa     Few       Aug   Chebeague
+#>  2 2016-08-12 00:00:00 Botrylloides violaceus Abundant  Aug   Chebeague
+#>  3 2016-08-12 00:00:00 Botryllus schlosseri   Few       Aug   Chebeague
+#>  4 2016-08-12 00:00:00 Caprella mutica        Common    Aug   Chebeague
+#>  5 2016-08-12 00:00:00 Didemnum vexillum      Abundant  Aug   Chebeague
+#>  6 2016-08-12 00:00:00 Membranipora sp.       Common    Aug   Chebeague
+#>  7 2016-08-19 00:00:00 Botrylloides violaceus Few       Aug   Chebeague
+#>  8 2016-08-19 00:00:00 Botryllus schlosseri   Rare      Aug   Chebeague
+#>  9 2016-08-19 00:00:00 Didemnum vexillum      Common    Aug   Chebeague
+#> 10 2016-08-19 00:00:00 Membranipora sp.       Abundant  Aug   Chebeague
+#> 11 2016-10-12 00:00:00 Botrylloides violaceus <NA>      Oct   Chebeague
+#> 12 2016-10-12 00:00:00 Botryllus schlosseri   <NA>      Oct   Chebeague
+#> 13 2016-10-12 00:00:00 Caprella mutica        <NA>      Oct   Chebeague
+#> 14 2016-10-12 00:00:00 Didemnum vexillum      <NA>      Oct   Chebeague
+#> 15 2016-10-12 00:00:00 Membranipora sp.       <NA>      Oct   Chebeague
 ```
 
 So, the missing observations from 2016 are all are from the month of
@@ -475,19 +480,19 @@ the_data %>%
   filter(Site == "Spring Point Marina", Year == 2018) %>%
   select(-Type, -Year, -Site, -City, -Weather, -Salinity, 
          -Temp, -Comments)
-#> # A tibble: 43 x 6
-#>    Date                State Species                Abundance Month Where   
-#>    <dttm>              <chr> <chr>                  <ord>     <fct> <chr>   
-#>  1 2018-06-26 00:00:00 Maine Ascidiella aspersa     Rare      Jun   Mainland
-#>  2 2018-06-26 00:00:00 Maine Styela clava           Rare      Jun   Mainland
-#>  3 2018-06-26 00:00:00 Maine Botrylloides violaceus Few       Jun   Mainland
-#>  4 2018-06-26 00:00:00 Maine Botryllus schlosseri   Few       Jun   Mainland
-#>  5 2018-06-26 00:00:00 Maine Carcinus maenas        Rare      Jun   Mainland
-#>  6 2018-06-26 00:00:00 Maine Tricellaria inopinata  Rare      Jun   Mainland
-#>  7 2018-06-26 00:00:00 Maine Caprella mutica        Few       Jun   Mainland
-#>  8 2018-06-26 00:00:00 Maine Membranipora sp.       Few       Jun   Mainland
-#>  9 2018-07-18 00:00:00 Maine Ascidiella aspersa     <NA>      Jul   Mainland
-#> 10 2018-07-18 00:00:00 Maine Styela clava           <NA>      Jul   Mainland
+#> # A tibble: 43 x 5
+#>    Date                Species                Abundance Month Where   
+#>    <dttm>              <chr>                  <ord>     <fct> <chr>   
+#>  1 2018-06-26 00:00:00 Ascidiella aspersa     Rare      Jun   Mainland
+#>  2 2018-06-26 00:00:00 Styela clava           Rare      Jun   Mainland
+#>  3 2018-06-26 00:00:00 Botrylloides violaceus Few       Jun   Mainland
+#>  4 2018-06-26 00:00:00 Botryllus schlosseri   Few       Jun   Mainland
+#>  5 2018-06-26 00:00:00 Carcinus maenas        Rare      Jun   Mainland
+#>  6 2018-06-26 00:00:00 Tricellaria inopinata  Rare      Jun   Mainland
+#>  7 2018-06-26 00:00:00 Caprella mutica        Few       Jun   Mainland
+#>  8 2018-06-26 00:00:00 Membranipora sp.       Few       Jun   Mainland
+#>  9 2018-07-18 00:00:00 Ascidiella aspersa     <NA>      Jul   Mainland
+#> 10 2018-07-18 00:00:00 Styela clava           <NA>      Jul   Mainland
 #> # ... with 33 more rows
 ```
 
@@ -526,13 +531,13 @@ the_data %>%
   select(-Date, -Type, -City, -Weather, -Salinity, 
          -Temp, -Abundance) %>%
   arrange
-#> # A tibble: 4 x 7
-#>   Site         State Species     Comments                    Month  Year Where  
-#>   <chr>        <chr> <chr>       <chr>                       <fct> <dbl> <chr>  
-#> 1 Siegel's Re~ Maine Membranipo~ The notes, show it to be a~ Jul    2012 Mainla~
-#> 2 Chebeague S~ Maine Didemnum v~ Tunicates on trap only - n~ Jul    2018 Chebea~
-#> 3 Great Diamo~ Maine Botryllus ~ Not a dramatic tide (.8) w~ Aug    2020 Great ~
-#> 4 Great Diamo~ Maine Membranipo~ Not a dramatic tide (.8) w~ Aug    2020 Great ~
+#> # A tibble: 4 x 6
+#>   Site          Species      Comments                        Month  Year Where  
+#>   <chr>         <chr>        <chr>                           <fct> <dbl> <chr>  
+#> 1 Siegel's Reef Membranipor~ The notes, show it to be absen~ Jul    2012 Mainla~
+#> 2 Chebeague St~ Didemnum ve~ Tunicates on trap only - none ~ Jul    2018 Chebea~
+#> 3 Great Diamon~ Botryllus s~ Not a dramatic tide (.8) with ~ Aug    2020 Great ~
+#> 4 Great Diamon~ Membranipor~ Not a dramatic tide (.8) with ~ Aug    2020 Great ~
 ```
 
 Based on the Comments, we believe we should retain each of these as
@@ -554,19 +559,19 @@ the_data <- the_data %>%
 
 ## No Species Reported
 
-Some rows contain date and time infomraiton, but no species designation.
+Some rows contain date and time information, but no species designation.
 
 ``` r
 the_data %>%
   filter(is.na(Species)) %>%
   select(-Date, -Type, -City, -Weather, -Salinity, 
          -Temp, -Abundance)
-#> # A tibble: 3 x 7
-#>   Site        State Species Comments                          Month  Year Where 
-#>   <chr>       <chr> <chr>   <chr>                             <fct> <dbl> <chr> 
-#> 1 Chebeague ~ Maine <NA>    Nothing to report. Native tunica~ Jun    2015 Chebe~
-#> 2 SMCC Dock   Maine <NA>    No critters. Dock recently pulled Jun    2015 Mainl~
-#> 3 Peaks Dock  Maine <NA>    Nothing found! Long blades of he~ May    2020 Peaks
+#> # A tibble: 3 x 6
+#>   Site         Species Comments                               Month  Year Where 
+#>   <chr>        <chr>   <chr>                                  <fct> <dbl> <chr> 
+#> 1 Chebeague S~ <NA>    Nothing to report. Native tunicates, ~ Jun    2015 Chebe~
+#> 2 SMCC Dock    <NA>    No critters. Dock recently pulled      Jun    2015 Mainl~
+#> 3 Peaks Dock   <NA>    Nothing found! Long blades of healthy~ May    2020 Peaks
 ```
 
 These records are all markers of an actual site visit that resulted in
@@ -576,32 +581,102 @@ records.
 
 ## Duplicate Records
 
-We use `pivot-wider()` followed by `pivot_longer()` and filter to
-identify duplicate records.
+We use `pivot-wider()` (with `values_fn = length`) followed by
+`pivot_longer()` and then filter to identify records collected on the
+same date and site.
 
 ``` r
 the_data %>%
+  select(-Type, -City, -Weather, -Comments, -Salinity, -Temp) %>%
   mutate(Abundance = as.character(Abundance)) %>%
-  pivot_wider(-c(Weather, Comments), 
-              names_from = Species, 
+  pivot_wider(names_from = Species, 
               values_from = Abundance,
               values_fn = length,
               #values_fill = "Absent"
               ) %>% 
-  pivot_longer( 11:29, names_to = "Species", values_to = "Count") %>%
-  filter(Count > 1) %>%
-  select(-Type, -City, -Salinity, -Temp, -Count)
-#> # A tibble: 5 x 7
-#>   Date                Site            State Month  Year Where   Species         
-#>   <dttm>              <chr>           <chr> <fct> <dbl> <chr>   <chr>           
-#> 1 2015-08-05 00:00:00 Chebeague Ston~ Maine Aug    2015 Chebea~ Botrylloides vi~
-#> 2 2015-08-05 00:00:00 Chebeague Ston~ Maine Aug    2015 Chebea~ Caprella mutica 
-#> 3 2016-06-27 00:00:00 Peaks Tidepool  Maine Jun    2016 Peaks   Botrylloides vi~
-#> 4 2016-06-27 00:00:00 Peaks Tidepool  Maine Jun    2016 Peaks   Membranipora sp.
-#> 5 2016-06-27 00:00:00 Peaks Tidepool  Maine Jun    2016 Peaks   Carcinus maenas
+  pivot_longer( 6:24, names_to = "Species", values_to = "Count") %>%
+  filter(Count > 1)
+#> # A tibble: 9 x 7
+#>   Date                Site            Month  Year Where   Species          Count
+#>   <dttm>              <chr>           <fct> <dbl> <chr>   <chr>            <int>
+#> 1 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Botrylloides vi~     2
+#> 2 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Botryllus schlo~     2
+#> 3 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Membranipora sp.     2
+#> 4 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Styela clava         2
+#> 5 2015-08-05 00:00:00 Chebeague Ston~ Aug    2015 Chebea~ Botrylloides vi~     2
+#> 6 2015-08-05 00:00:00 Chebeague Ston~ Aug    2015 Chebea~ Caprella mutica      2
+#> 7 2016-06-27 00:00:00 Peaks Tidepool  Jun    2016 Peaks   Botrylloides vi~     2
+#> 8 2016-06-27 00:00:00 Peaks Tidepool  Jun    2016 Peaks   Membranipora sp.     2
+#> 9 2016-06-27 00:00:00 Peaks Tidepool  Jun    2016 Peaks   Carcinus maenas      2
 ```
 
 ### First Duplicate Field Record
+
+``` r
+the_data %>%
+  filter(Year    == 2013 &
+     Month   == 'Jul' &
+     Site    == "Siegel's Reef") %>%
+  arrange(Species)
+#> # A tibble: 9 x 13
+#>   Date                Site  Type  City  Weather Salinity  Temp Species Abundance
+#>   <dttm>              <chr> <fct> <chr> <chr>      <dbl> <dbl> <chr>   <ord>    
+#> 1 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Cloudy~       25    19 Botryl~ Common   
+#> 2 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Botryl~ Abundant 
+#> 3 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Cloudy~       25    19 Botryl~ Rare     
+#> 4 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Botryl~ Few      
+#> 5 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Cloudy~       25    19 Carcin~ Rare     
+#> 6 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Cloudy~       25    19 Membra~ Rare     
+#> 7 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Membra~ Few      
+#> 8 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Cloudy~       25    19 Styela~ Rare     
+#> 9 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Styela~ Rare     
+#> # ... with 4 more variables: Comments <chr>, Month <fct>, Year <dbl>,
+#> #   Where <chr>
+```
+
+These show mostly PAIRS of duplicate observations, with differences in
+wording of Weather and different temperatures. That suggests two
+different observers. Different temperatures suggest different times of
+day, or different thermometers, not well calibrated.
+
+One observer (?) noted Green Crab, the other did not. perhaps a trainer
+and a trainee. The abundance data differs in several places by one
+abundance class.
+
+We judge it is better to select the sample that observed the green crab,
+as most of our analyses will be based on presence/absence.
+
+#### Check Selection
+
+``` r
+the_data %>%
+  filter(Year    == 2013 &
+           Month   == 'Jul' &
+           Site    == "Siegel's Reef" &
+           Weather == 'Partly cloudy') %>%
+  arrange(Species)
+#> # A tibble: 4 x 13
+#>   Date                Site  Type  City  Weather Salinity  Temp Species Abundance
+#>   <dttm>              <chr> <fct> <chr> <chr>      <dbl> <dbl> <chr>   <ord>    
+#> 1 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Botryl~ Abundant 
+#> 2 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Botryl~ Few      
+#> 3 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Membra~ Few      
+#> 4 2013-07-12 00:00:00 Sieg~ Tide~ Sout~ Partly~       25    17 Styela~ Rare     
+#> # ... with 4 more variables: Comments <chr>, Month <fct>, Year <dbl>,
+#> #   Where <chr>
+```
+
+#### Remove Duplicate Records
+
+``` r
+the_data <- the_data %>%
+  filter( ! (Year    == 2013 &
+               Month   == 'Jul' &
+               Site    == "Siegel's Reef" &
+               Weather == 'Partly cloudy'))
+```
+
+### Second Duplicate Field Record
 
 ``` r
 the_data %>%
@@ -609,19 +684,19 @@ the_data %>%
      Month    == 'Aug' &
      Site     == 'Chebeague Stone Pier') %>%
   arrange(Species, Date)
-#> # A tibble: 8 x 14
-#>   Date                Site  Type  City  State Weather Salinity  Temp Species
-#>   <dttm>              <chr> <fct> <chr> <chr> <chr>      <dbl> <dbl> <chr>  
-#> 1 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Maine sunny ~       34    19 Botryl~
-#> 2 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Maine Sunny,~       34    19 Botryl~
-#> 3 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Maine Foggy         35    20 Botryl~
-#> 4 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Maine Foggy         35    20 Botryl~
-#> 5 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Maine sunny ~       34    19 Caprel~
-#> 6 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Maine Sunny,~       34    19 Caprel~
-#> 7 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Maine Foggy         35    20 Caprel~
-#> 8 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Maine Foggy         35    20 Membra~
-#> # ... with 5 more variables: Abundance <ord>, Comments <chr>, Month <fct>,
-#> #   Year <dbl>, Where <chr>
+#> # A tibble: 8 x 13
+#>   Date                Site  Type  City  Weather Salinity  Temp Species Abundance
+#>   <dttm>              <chr> <fct> <chr> <chr>      <dbl> <dbl> <chr>   <ord>    
+#> 1 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ sunny ~       34    19 Botryl~ Rare     
+#> 2 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Sunny,~       34    19 Botryl~ Rare     
+#> 3 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Foggy         35    20 Botryl~ Few      
+#> 4 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Foggy         35    20 Botryl~ Few      
+#> 5 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ sunny ~       34    19 Caprel~ Rare     
+#> 6 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Sunny,~       34    19 Caprel~ Rare     
+#> 7 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Foggy         35    20 Caprel~ Rare     
+#> 8 2015-08-21 00:00:00 Cheb~ Dock  Cheb~ Foggy         35    20 Membra~ Few      
+#> # ... with 4 more variables: Comments <chr>, Month <fct>, Year <dbl>,
+#> #   Where <chr>
 ```
 
 Note a few things: 1. We have two sample collections in the same month.
@@ -641,13 +716,13 @@ the_data %>%
   filter((Date    == my_date &
           Site == 'Chebeague Stone Pier' &
            Weather == 'Sunny, clear'))
-#> # A tibble: 2 x 14
-#>   Date                Site  Type  City  State Weather Salinity  Temp Species
-#>   <dttm>              <chr> <fct> <chr> <chr> <chr>      <dbl> <dbl> <chr>  
-#> 1 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Maine Sunny,~       34    19 Botryl~
-#> 2 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Maine Sunny,~       34    19 Caprel~
-#> # ... with 5 more variables: Abundance <ord>, Comments <chr>, Month <fct>,
-#> #   Year <dbl>, Where <chr>
+#> # A tibble: 2 x 13
+#>   Date                Site  Type  City  Weather Salinity  Temp Species Abundance
+#>   <dttm>              <chr> <fct> <chr> <chr>      <dbl> <dbl> <chr>   <ord>    
+#> 1 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Sunny,~       34    19 Botryl~ Rare     
+#> 2 2015-08-05 00:00:00 Cheb~ Dock  Cheb~ Sunny,~       34    19 Caprel~ Rare     
+#> # ... with 4 more variables: Comments <chr>, Month <fct>, Year <dbl>,
+#> #   Where <chr>
 ```
 
 #### Remove Duplicate Records
@@ -659,7 +734,7 @@ the_data <- the_data %>%
               Weather == 'Sunny, clear'))
 ```
 
-### Second Duplicate Field Record
+### Third Duplicate Field Record
 
 ``` r
 the_data %>%
@@ -667,17 +742,17 @@ the_data %>%
      Month   == 'Jun' &
      Site    == 'Peaks Tidepool') %>%
   arrange(Species, Date)
-#> # A tibble: 6 x 14
-#>   Date                Site  Type  City  State Weather Salinity  Temp Species
-#>   <dttm>              <chr> <fct> <chr> <chr> <chr>      <dbl> <dbl> <chr>  
-#> 1 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Clear,~       33    18 Botryl~
-#> 2 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Sunny ~       33    18 Botryl~
-#> 3 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Clear,~       33    18 Carcin~
-#> 4 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Sunny ~       33    18 Carcin~
-#> 5 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Clear ~       33    18 Membra~
-#> 6 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Sunny ~       33    18 Membra~
-#> # ... with 5 more variables: Abundance <ord>, Comments <chr>, Month <fct>,
-#> #   Year <dbl>, Where <chr>
+#> # A tibble: 6 x 13
+#>   Date                Site  Type  City  Weather Salinity  Temp Species Abundance
+#>   <dttm>              <chr> <fct> <chr> <chr>      <dbl> <dbl> <chr>   <ord>    
+#> 1 2016-06-27 00:00:00 Peak~ Tide~ Port~ Clear,~       33    18 Botryl~ Rare     
+#> 2 2016-06-27 00:00:00 Peak~ Tide~ Port~ Sunny ~       33    18 Botryl~ Rare     
+#> 3 2016-06-27 00:00:00 Peak~ Tide~ Port~ Clear,~       33    18 Carcin~ Rare     
+#> 4 2016-06-27 00:00:00 Peak~ Tide~ Port~ Sunny ~       33    18 Carcin~ Rare     
+#> 5 2016-06-27 00:00:00 Peak~ Tide~ Port~ Clear ~       33    18 Membra~ Rare     
+#> 6 2016-06-27 00:00:00 Peak~ Tide~ Port~ Sunny ~       33    18 Membra~ Few      
+#> # ... with 4 more variables: Comments <chr>, Month <fct>, Year <dbl>,
+#> #   Where <chr>
 ```
 
 These show three PAIRS of duplicate observations, with differences in
@@ -694,14 +769,14 @@ the_data %>%
            Site    == 'Peaks Tidepool' &
            Weather == 'Sunny and beautiful') %>%
   arrange(Species, Date)
-#> # A tibble: 3 x 14
-#>   Date                Site  Type  City  State Weather Salinity  Temp Species
-#>   <dttm>              <chr> <fct> <chr> <chr> <chr>      <dbl> <dbl> <chr>  
-#> 1 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Sunny ~       33    18 Botryl~
-#> 2 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Sunny ~       33    18 Carcin~
-#> 3 2016-06-27 00:00:00 Peak~ Tide~ Port~ Maine Sunny ~       33    18 Membra~
-#> # ... with 5 more variables: Abundance <ord>, Comments <chr>, Month <fct>,
-#> #   Year <dbl>, Where <chr>
+#> # A tibble: 3 x 13
+#>   Date                Site  Type  City  Weather Salinity  Temp Species Abundance
+#>   <dttm>              <chr> <fct> <chr> <chr>      <dbl> <dbl> <chr>   <ord>    
+#> 1 2016-06-27 00:00:00 Peak~ Tide~ Port~ Sunny ~       33    18 Botryl~ Rare     
+#> 2 2016-06-27 00:00:00 Peak~ Tide~ Port~ Sunny ~       33    18 Carcin~ Rare     
+#> 3 2016-06-27 00:00:00 Peak~ Tide~ Port~ Sunny ~       33    18 Membra~ Few      
+#> # ... with 4 more variables: Comments <chr>, Month <fct>, Year <dbl>,
+#> #   Where <chr>
 ```
 
 #### Remove Duplicate Records
@@ -751,6 +826,8 @@ while it fills in values not present in the draft long data with
 specific analysis of the relative abundance data whether to replace
 those NAs with “Absent” or not.
 
+## Pivot to “Wide” Data Format
+
 ``` r
 presence_data_wide <- the_data %>%
   select(-Abundance) %>%
@@ -772,7 +849,7 @@ abundance_data_wide <- the_data %>%
               )
 ```
 
-# Pivot Back to “Long” Data Format
+## Pivot Back to “Long” Data Format
 
 ``` r
 presence_data <- presence_data_wide %>%

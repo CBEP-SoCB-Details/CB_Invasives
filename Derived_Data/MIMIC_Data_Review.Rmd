@@ -77,8 +77,9 @@ the_data <- read_excel(fpath, sheet = 'Master Data Record',
          Month = factor(Month, levels = 1:12, labels =  month.abb),
          Year = as.numeric(format(Date, format = '%Y'))) %>%
   filter(! is.na(Date)) %>%
-  rename(Salinity = `Salinty (ppt)`,   # Note spelling error
-         Temp     = `H20 temp C`)      # Note that's  H 2 zero,
+  rename(Salinity = `Salinty (ppt)`,      # Note spelling error
+         Temp     = `H20 temp C`)   %>%   # Note that's  H 2 zero,
+  select(-State)
 ```
 
 
@@ -358,7 +359,7 @@ the_data <- the_data %>%
 
 
 ## No Species Reported
-Some rows contain date and time infomraiton, but no species designation.
+Some rows contain date and time information, but no species designation.
 ```{r}
 the_data %>%
   filter(is.na(Species)) %>%
@@ -370,23 +371,63 @@ observed species.  Removing empty these rows would understate effort, so could
 overestimate prevalence.  We do not want to delete these records.
 
 ## Duplicate Records
-We use `pivot-wider()` followed by `pivot_longer()` and filter to identify 
-duplicate records.
+We use `pivot-wider()` (with `values_fn = length`) followed by `pivot_longer()` 
+and then filter to identify records collected on the same date and site.
 ```{r}
 the_data %>%
+  select(-Type, -City, -Weather, -Comments, -Salinity, -Temp) %>%
   mutate(Abundance = as.character(Abundance)) %>%
-  pivot_wider(-c(Weather, Comments), 
-              names_from = Species, 
+  pivot_wider(names_from = Species, 
               values_from = Abundance,
               values_fn = length,
               #values_fill = "Absent"
               ) %>% 
-  pivot_longer( 11:29, names_to = "Species", values_to = "Count") %>%
-  filter(Count > 1) %>%
-  select(-Type, -City, -Salinity, -Temp, -Count)
+  pivot_longer( 6:24, names_to = "Species", values_to = "Count") %>%
+  filter(Count > 1)
 ```
 
 ### First Duplicate Field Record
+```{r}
+the_data %>%
+  filter(Year    == 2013 &
+     Month   == 'Jul' &
+     Site    == "Siegel's Reef") %>%
+  arrange(Species)
+```
+These show mostly PAIRS of duplicate observations, with differences in wording of 
+Weather and different temperatures.  That suggests two different observers. 
+Different temperatures suggest different times of day, or different
+thermometers, not well calibrated.
+
+One observer (?) noted Green Crab, the other did not.   perhaps
+a trainer and a trainee.  The abundance data differs in several places
+by one abundance class.
+
+We judge it is better to select the sample that  observed the green crab, as 
+most of our analyses will be based on presence/absence.
+
+
+#### Check Selection
+```{r}
+the_data %>%
+  filter(Year    == 2013 &
+           Month   == 'Jul' &
+           Site    == "Siegel's Reef" &
+           Weather == 'Partly cloudy') %>%
+  arrange(Species)
+```
+
+#### Remove Duplicate Records
+```{r}
+the_data <- the_data %>%
+  filter( ! (Year    == 2013 &
+               Month   == 'Jul' &
+               Site    == "Siegel's Reef" &
+               Weather == 'Partly cloudy'))
+```
+
+
+### Second Duplicate Field Record
 ```{r}
 the_data %>%
   filter(Year == 2015 &
@@ -422,7 +463,7 @@ the_data <- the_data %>%
               Weather == 'Sunny, clear'))
 ```
 
-### Second Duplicate Field Record
+### Third Duplicate Field Record
 ```{r}
 the_data %>%
   filter(Year    == 2016 &
@@ -454,6 +495,7 @@ the_data <- the_data %>%
                Weather == 'Sunny and beautiful'))
 ```
 
+
 # Construct Presence / Absence Data 
 We now have a data set that contains one and only one row for every time a 
 species was observed.  If the `Abundance` vector contain data, we have an
@@ -484,7 +526,9 @@ Note that this procedure retains any "real" NAs in the Abundance data, while it
 fills in values not present in the draft long data with "Absent".  This means we 
 do not count data where species were recorded as "present", which is probematic.
 A decision needs t be made on each specific analysis of the relative abundance
-data whether to replace those NAs with "Absent" or not. 
+data whether to replace those NAs with "Absent" or not.
+
+## Pivot to "Wide" Data Format
 ```{r}
 presence_data_wide <- the_data %>%
   select(-Abundance) %>%
@@ -509,7 +553,7 @@ abundance_data_wide <- the_data %>%
 ```
 
 
-# Pivot Back to "Long" Data Format
+## Pivot Back to "Long" Data Format
 ```{r}
 presence_data <- presence_data_wide %>%
   pivot_longer(`Botrylloides violaceus`:`Tricellaria inopinata`, 
