@@ -247,8 +247,6 @@ total_spp_long <- total_spp %>%
                values_to = 'Value')
 ```
 
-
-
 ## Plots
 ### Total Invasive Species
 ```{r fig.width = 5, fig.height = 4.5}
@@ -496,8 +494,11 @@ common <- recent_data %>%
   slice_head(n = 20) %>%
   select(-Total) %>%
   
-  # And convert the common names to a factor, ordered by frequency on Docks.
-  mutate(Common = factor(Common),
+  # And convert the common names to a factor, ordered by frequency on Docks
+  mutate(Common = if_else(Species == 'Didemnum vexillum', 
+                          '"Didemnum" Tunicate',
+                          Common),
+         Common = factor(Common),
          Common = fct_reorder(Common, -Dock))%>%
   select(-Dock)
 common

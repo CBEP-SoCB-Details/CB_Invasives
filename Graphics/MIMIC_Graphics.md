@@ -123,6 +123,7 @@ abundance_data <- read_csv(file.path(sibling, fn),
          Month = factor(Month, levels = month.abb),
          Abundance = ordered(Abundance, levels = c('Absent', 'Rare', 'Few', 
                                                    'Common', 'Abundant')))
+#> Warning: The following named parsers don't match the column names: State
 
 fn <- 'Presence_Data.csv'
 presence_data <- read_csv(file.path(sibling, fn),
@@ -143,6 +144,7 @@ presence_data <- read_csv(file.path(sibling, fn),
                            )) %>%
   mutate(Type  = factor(Type, levels = c('Dock', 'Tidepool')),
          Month = factor(Month, levels = month.abb))
+#> Warning: The following named parsers don't match the column names: State
 ```
 
 # Convert to Factors for Display Order
@@ -624,43 +626,45 @@ common <- recent_data %>%
   slice_head(n = 20) %>%
   select(-Total) %>%
   
-  # And convert the common names to a factor, ordered by frequency on Docks.
-  mutate(Common = factor(Common),
+  # And convert the common names to a factor, ordered by frequency on Docks
+  mutate(Common = if_else(Species == 'Didemnum vexillum', 
+                          '"Didemnum" Tunicate',
+                          Common),
+         Common = factor(Common),
          Common = fct_reorder(Common, -Dock))%>%
   select(-Dock)
 common
 #> # A tibble: 20 x 4
-#>    Species                Common                          Type     Observations
-#>    <chr>                  <fct>                           <fct>           <int>
-#>  1 Botrylloides violaceus "Sheath Tunicate"               Dock               72
-#>  2 Botrylloides violaceus "Sheath Tunicate"               Tidepool           39
-#>  3 Membranipora sp.       "Lacy Crust Bryozoan"           Dock               63
-#>  4 Membranipora sp.       "Lacy Crust Bryozoan"           Tidepool           26
-#>  5 Carcinus maenas        "Green Crab"                    Dock               19
-#>  6 Carcinus maenas        "Green Crab"                    Tidepool           46
-#>  7 Didemnum vexillum      "\"Mystery\" Colonial Tunicate" Dock               35
-#>  8 Didemnum vexillum      "\"Mystery\" Colonial Tunicate" Tidepool           17
-#>  9 Caprella mutica        "Skeleton Shrimp"               Dock               47
-#> 10 Caprella mutica        "Skeleton Shrimp"               Tidepool            4
-#> 11 Styela clava           "Club Tunicate"                 Dock               39
-#> 12 Styela clava           "Club Tunicate"                 Tidepool            9
-#> 13 Botryllus schlosseri   "Golden Star Tunicate"          Dock               28
-#> 14 Botryllus schlosseri   "Golden Star Tunicate"          Tidepool           19
-#> 15 Ascidiella aspersa     "Sea Squirt"                    Dock               33
-#> 16 Ascidiella aspersa     "Sea Squirt"                    Tidepool            4
-#> 17 Ostrea edulis          "European Oyster"               Dock               10
-#> 18 Ostrea edulis          "European Oyster"               Tidepool           19
-#> 19 Tricellaria inopinata  "Unexpected Bryozoan"           Dock               28
-#> 20 Tricellaria inopinata  "Unexpected Bryozoan"           Tidepool            1
+#>    Species                Common                  Type     Observations
+#>    <chr>                  <fct>                   <fct>           <int>
+#>  1 Botrylloides violaceus "Sheath Tunicate"       Dock               72
+#>  2 Botrylloides violaceus "Sheath Tunicate"       Tidepool           39
+#>  3 Membranipora sp.       "Lacy Crust Bryozoan"   Dock               63
+#>  4 Membranipora sp.       "Lacy Crust Bryozoan"   Tidepool           26
+#>  5 Carcinus maenas        "Green Crab"            Dock               19
+#>  6 Carcinus maenas        "Green Crab"            Tidepool           46
+#>  7 Didemnum vexillum      "\"Didemnum\" Tunicate" Dock               35
+#>  8 Didemnum vexillum      "\"Didemnum\" Tunicate" Tidepool           17
+#>  9 Caprella mutica        "Skeleton Shrimp"       Dock               47
+#> 10 Caprella mutica        "Skeleton Shrimp"       Tidepool            4
+#> 11 Styela clava           "Club Tunicate"         Dock               39
+#> 12 Styela clava           "Club Tunicate"         Tidepool            9
+#> 13 Botryllus schlosseri   "Golden Star Tunicate"  Dock               28
+#> 14 Botryllus schlosseri   "Golden Star Tunicate"  Tidepool           19
+#> 15 Ascidiella aspersa     "Sea Squirt"            Dock               33
+#> 16 Ascidiella aspersa     "Sea Squirt"            Tidepool            4
+#> 17 Ostrea edulis          "European Oyster"       Dock               10
+#> 18 Ostrea edulis          "European Oyster"       Tidepool           19
+#> 19 Tricellaria inopinata  "Unexpected Bryozoan"   Dock               28
+#> 20 Tricellaria inopinata  "Unexpected Bryozoan"   Tidepool            1
 ```
 
 ``` r
 levels(common$Common)
-#>  [1] "Sheath Tunicate"               "Lacy Crust Bryozoan"          
-#>  [3] "Skeleton Shrimp"               "Club Tunicate"                
-#>  [5] "\"Mystery\" Colonial Tunicate" "Sea Squirt"                   
-#>  [7] "Golden Star Tunicate"          "Unexpected Bryozoan"          
-#>  [9] "Green Crab"                    "European Oyster"
+#>  [1] "Sheath Tunicate"       "Lacy Crust Bryozoan"   "Skeleton Shrimp"      
+#>  [4] "Club Tunicate"         "\"Didemnum\" Tunicate" "Sea Squirt"           
+#>  [7] "Golden Star Tunicate"  "Unexpected Bryozoan"   "Green Crab"           
+#> [10] "European Oyster"
 ```
 
 ``` r
