@@ -190,7 +190,7 @@ presence_data <- presence_data %>%
 # Add Order Factors
 
 We need to organize graphics by island in consistent structure. We will
-use a bar chart, organized by Island and a common sequence within island
+use a bar chart, organized by island and a common sequence within island
 groups. To facilitate that, we need a factor that orders sites
 consistently within island groups. While we are at it, we create
 alternate labels for the plots.
@@ -317,6 +317,6 @@ We also need to consider different patterns of “common”.
 Some species appear more abundant in recent years, but that may reflect
 different distributions of effort among years and sites.
 
-This suggests a couple of binomial models. but binomial models are going
+This suggests a couple of binomial models. However, binomial models are going
 to be structurally unstable, since many species are rare enough that we
 will have structural zeros, and thus a significant Hauke-Donner effect.
