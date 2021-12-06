@@ -115,7 +115,7 @@ sibling  <- file.path(parent,sibfldnm)
 ```
 
 We have data presented on two tabs, “Master Data Record” and
-‘Removed-discontinued sites’. it’s not obvious why we would omit data
+‘Removed-discontinued sites’. It’s not obvious why we would omit data
 from a discontinued site. It depends on the underlying purpose.
 
 ``` r
@@ -302,7 +302,7 @@ xtabs(~ Site + Type, data = the_data)
 Matt Liebman of EPA requested graphics ordered by distance of each
 island from the Mainland (as he described it), and grouped or otherwise
 coded by Mainland vs. Island and dock vs. tidepool. We create factors to
-address that need
+address that need.
 
 ``` r
 the_data <- the_data %>%
@@ -639,8 +639,8 @@ wording of Weather and different temperatures. That suggests two
 different observers. Different temperatures suggest different times of
 day, or different thermometers, not well calibrated.
 
-One observer (?) noted Green Crab, the other did not. perhaps a trainer
-and a trainee. The abundance data differs in several places by one
+One observer (?) noted Green Crab, the other did not. Perhaps one was a trainer
+and the other was a trainee. The abundance data differs in several places by one
 abundance class.
 
 We judge it is better to select the sample that observed the green crab,
@@ -822,7 +822,7 @@ chose to pursue them.
 Note that this procedure retains any “real” NAs in the Abundance data,
 while it fills in values not present in the draft long data with
 “Absent”. This means we do not count data where species were recorded as
-“present”, which is probematic. A decision needs t be made on each
+“present”, which is problematic. A decision needs to be made on each
 specific analysis of the relative abundance data whether to replace
 those NAs with “Absent” or not.
 
