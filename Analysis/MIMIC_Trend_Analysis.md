@@ -240,7 +240,7 @@ presence_data <- presence_data %>%
 
 # Analyzing Sampling Effort
 
-Lets look at distribution of EFFORT by sites and years.
+Let's look at distribution of EFFORT by sites and years.
 
 ``` r
 site_visits <- presence_data %>%
@@ -313,7 +313,7 @@ where some sites have been tracked for only a few years. We probably
 need to develop parallel analyses, using both data from the two sites
 tracked long enough to examine trends and all data from all sites.
 
-# Analysis Pricipals
+# Analysis Priciples
 
 We have to be a bit careful here about interpreting these data, because
 of varying annual effort. We need to make sure we are scaling analyses
@@ -398,7 +398,7 @@ We are aware that the Palaemon was not searched for in the first few
 years of the program, but it was not found anywhere in New England until
 a few years ago, so that is unlikely to be a problem. A few other
 species were also added to the program over the period of record, as
-they because mroe abundant in New England.
+they became more abundant in New England.
 
 ### Binomial Models
 
@@ -453,7 +453,7 @@ That also suggests the probability of observing *Caprella* has
 increased.
 
 We can abuse the `emmeans()` function slightly to generate predicted
-probabilities of observing *Caprella* on a ny give nsite visit at one of
+probabilities of observing *Caprella* on any given site visit at one of
 these two sites.
 
 ``` r
@@ -1064,6 +1064,6 @@ cbind(nested_presence$glm_slope, nested_abundance$vglm_slope)
 The slopes are sometimes identical – probably when there were only two
 categories of abundance recorded (effectively present and absent,
 regardless of  
-the nominal abundance). however, that is not always the case, so these
+the nominal abundance). However, that is not always the case, so these
 two analyses are based on slightly different information, but returning
 functionally similar results.
