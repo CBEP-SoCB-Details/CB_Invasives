@@ -20,10 +20,10 @@ geospatial data as teh KMZ, but in a more convenient tabular form.
       6 monitoring events or site visits per year. Sometimes May and 
       even June can be pretty "bare" (few species are present and easy to
       spot) so if only one or two species were present, it makes for
-      "scant" data.  "Not present" is also real data, but the way the data
-      organized and presented, MIMIC only recordds presence, not absence.
+      "scant" data.  "Not present" is also real data, but the way the data is
+      organized and presented, MIMIC only records presence, not absence.
 
-      Data completeness among the island sitees is highest for Peaks island, 
+      Data completeness among the island sites is highest for Peaks island, 
       with Chebeague coming in a close second.  Long Island's data is less complete.
 
       The mainland sites (SMCC Dock, Spring Point, and Siegel's
