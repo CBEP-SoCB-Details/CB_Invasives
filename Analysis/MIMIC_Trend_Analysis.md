@@ -1,4 +1,4 @@
-Examination of Trendsin MIMIC Invasive Species Data
+Examination of Trends in MIMIC Invasive Species Data
 ================
 Curtis C. Bohlen, Casco Bay Estuary Partnership
 3/12/2021
@@ -13,8 +13,8 @@ Curtis C. Bohlen, Casco Bay Estuary Partnership
 -   [Add Order Factors](#add-order-factors)
 -   [Analyzing Sampling Effort](#analyzing-sampling-effort)
 -   [Trend Data](#trend-data)
--   [Analysis Pricipals](#analysis-pricipals)
--   [Presence / Absence](#presence-absence)
+-   [Analysis Principles](#analysis-principles)
+-   [Presence / Absence](#presence--absence)
     -   [Trend Data](#trend-data-1)
         -   [Preliminary Graphic](#preliminary-graphic)
         -   [Binomial Models](#binomial-models)
@@ -53,11 +53,16 @@ the number of site visits each year.
 
 ``` r
 library(tidyverse)
-#> -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
-#> v ggplot2 3.3.3     v purrr   0.3.4
-#> v tibble  3.0.5     v dplyr   1.0.3
-#> v tidyr   1.1.2     v stringr 1.4.0
-#> v readr   1.4.0     v forcats 0.5.0
+#> Warning: package 'tidyverse' was built under R version 4.0.5
+#> -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+#> v ggplot2 3.3.5     v purrr   0.3.4
+#> v tibble  3.1.6     v dplyr   1.0.7
+#> v tidyr   1.1.4     v stringr 1.4.0
+#> v readr   2.1.0     v forcats 0.5.1
+#> Warning: package 'ggplot2' was built under R version 4.0.5
+#> Warning: package 'tidyr' was built under R version 4.0.5
+#> Warning: package 'dplyr' was built under R version 4.0.5
+#> Warning: package 'forcats' was built under R version 4.0.5
 #> -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 #> x dplyr::filter() masks stats::filter()
 #> x dplyr::lag()    masks stats::lag()
@@ -72,9 +77,11 @@ library(VGAM)
 #> 
 #>     fill
 library(emmeans)
+#> Warning: package 'emmeans' was built under R version 4.0.5
 #library(readr)
 
 library(GGally)
+#> Warning: package 'GGally' was built under R version 4.0.5
 #> Registered S3 method overwritten by 'GGally':
 #>   method from   
 #>   +.gg   ggplot2
@@ -240,7 +247,7 @@ presence_data <- presence_data %>%
 
 # Analyzing Sampling Effort
 
-Lets look at distribution of EFFORT by sites and years.
+Let’s look at distribution of EFFORT by sites and years.
 
 ``` r
 site_visits <- presence_data %>%
@@ -257,21 +264,21 @@ site_visits %>%
 #> `summarise()` has grouped output by 'Site'. You can override using the `.groups` argument.
 #> # A tibble: 12 x 14
 #> # Groups:   Site [12]
-#>    Site  `2008` `2009` `2010` `2011` `2012` `2013` `2014` `2015` `2016` `2017`
-#>    <chr>  <int>  <int>  <int>  <int>  <int>  <int>  <int>  <int>  <int>  <int>
-#>  1 Chan~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-#>  2 Cheb~     NA     NA     NA     NA     NA     NA      5      3      2      4
-#>  3 Fowl~     NA     NA     NA     NA     NA     NA     NA     NA      2      3
-#>  4 Grea~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-#>  5 Grea~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-#>  6 Long~     NA     NA     NA     NA     NA     NA     NA      1      1     NA
-#>  7 Peak~     NA     NA     NA     NA     NA     NA      4      4      3      1
-#>  8 Peak~     NA     NA     NA     NA     NA     NA      1      2      4      2
-#>  9 Sieg~     NA      3      3      5      4      3      2      3      1      1
-#> 10 SMCC~      2      4      3      5      3      2      2      4     NA     NA
-#> 11 Spri~     NA     NA     NA     NA     NA     NA     NA     NA     NA      3
-#> 12 Wald~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-#> # ... with 3 more variables: `2018` <int>, `2019` <int>, `2020` <int>
+#>    Site    `2008` `2009` `2010` `2011` `2012` `2013` `2014` `2015` `2016` `2017`
+#>    <chr>    <int>  <int>  <int>  <int>  <int>  <int>  <int>  <int>  <int>  <int>
+#>  1 Chandl~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+#>  2 Chebea~     NA     NA     NA     NA     NA     NA      5      3      2      4
+#>  3 Fowler~     NA     NA     NA     NA     NA     NA     NA     NA      2      3
+#>  4 Great ~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+#>  5 Great ~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+#>  6 Long I~     NA     NA     NA     NA     NA     NA     NA      1      1     NA
+#>  7 Peaks ~     NA     NA     NA     NA     NA     NA      4      4      3      1
+#>  8 Peaks ~     NA     NA     NA     NA     NA     NA      1      2      4      2
+#>  9 Siegel~     NA      3      3      5      4      3      2      3      1      1
+#> 10 SMCC D~      2      4      3      5      3      2      2      4     NA     NA
+#> 11 Spring~     NA     NA     NA     NA     NA     NA     NA     NA     NA      3
+#> 12 Waldo ~     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+#> # ... with 3 more variables: 2018 <int>, 2019 <int>, 2020 <int>
 ```
 
 So…
@@ -313,7 +320,7 @@ where some sites have been tracked for only a few years. We probably
 need to develop parallel analyses, using both data from the two sites
 tracked long enough to examine trends and all data from all sites.
 
-# Analysis Pricipals
+# Analysis Principles
 
 We have to be a bit careful here about interpreting these data, because
 of varying annual effort. We need to make sure we are scaling analyses
@@ -359,7 +366,7 @@ tmp <- trend_presence_data %>%
 tmp
 #> # A tibble: 378 x 5
 #>     Year Site      Species                site_visits frequency
-#>  * <int> <chr>     <chr>                        <int>     <dbl>
+#>    <int> <chr>     <chr>                        <int>     <dbl>
 #>  1  2008 SMCC Dock Ascidiella aspersa               2       0  
 #>  2  2008 SMCC Dock Botrylloides violaceus           2       1  
 #>  3  2008 SMCC Dock Botryllus schlosseri             2       0.5
@@ -394,11 +401,11 @@ these two long-term sites: *Caprella mutica*, *Didemnum vexillum*,
 A few of the other sites may also provide significant changes in
 abundance, but it looks unlikely.
 
-We are aware that the Palaemon was not searched for in the first few
+We are aware that the *Palaemon* was not searched for in the first few
 years of the program, but it was not found anywhere in New England until
 a few years ago, so that is unlikely to be a problem. A few other
 species were also added to the program over the period of record, as
-they because mroe abundant in New England.
+they became more abundant in New England.
 
 ### Binomial Models
 
@@ -453,7 +460,7 @@ That also suggests the probability of observing *Caprella* has
 increased.
 
 We can abuse the `emmeans()` function slightly to generate predicted
-probabilities of observing *Caprella* on a ny give nsite visit at one of
+probabilities of observing *Caprella* on any given site visit at one of
 these two sites.
 
 ``` r
@@ -705,21 +712,21 @@ tmp <- trend_abundance_data %>%
 #> * Common -> Common...18
 tmp
 #> # A tibble: 1,216 x 19
-#>    Date                Site  Type  City  Salinity  Temp Month  Year Where
-#>    <dttm>              <chr> <fct> <chr>    <dbl> <dbl> <fct> <int> <fct>
-#>  1 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  2 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  3 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  4 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  5 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  6 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  7 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  8 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#>  9 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
-#> 10 2008-07-18 00:00:00 SMCC~ Dock  Sout~       29    18 Jul    2008 Main~
+#>    Date                Site      Type  City     Salinity  Temp Month  Year Where
+#>    <dttm>              <chr>     <fct> <chr>       <dbl> <dbl> <fct> <int> <fct>
+#>  1 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  2 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  3 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  4 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  5 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  6 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  7 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  8 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#>  9 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
+#> 10 2008-07-18 00:00:00 SMCC Dock Dock  South P~       29    18 Jul    2008 Main~
 #> # ... with 1,206 more rows, and 10 more variables: Species <chr>,
 #> #   Common_Name <chr>, Order <dbl>, Label <chr>, Absent <dbl>, Rare <dbl>,
-#> #   Few <dbl>, Common <dbl>, Abundant <dbl>, `NA` <dbl>
+#> #   Few <dbl>, Common <dbl>, Abundant <dbl>, NA <dbl>
 ```
 
 ``` r
@@ -1064,6 +1071,6 @@ cbind(nested_presence$glm_slope, nested_abundance$vglm_slope)
 The slopes are sometimes identical – probably when there were only two
 categories of abundance recorded (effectively present and absent,
 regardless of  
-the nominal abundance). however, that is not always the case, so these
+the nominal abundance). However, that is not always the case, so these
 two analyses are based on slightly different information, but returning
 functionally similar results.

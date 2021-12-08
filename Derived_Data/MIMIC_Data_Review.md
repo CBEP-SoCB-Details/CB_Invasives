@@ -35,7 +35,7 @@ Curtis C. Bohlen, Casco Bay Estuary Partnership
         -   [Third Duplicate Field
             Record](#third-duplicate-field-record)
 -   [Construct Presence / Absence
-    Data](#construct-presence-absence-data)
+    Data](#construct-presence--absence-data)
 -   [Data Reorganization](#data-reorganization)
     -   [Pivot to “Wide” Data Format](#pivot-to-wide-data-format)
     -   [Pivot Back to “Long” Data
@@ -71,11 +71,16 @@ across four Islands (Peaks, Chebeague, Long, and Great Diamond).
 
 ``` r
 library(tidyverse)
-#> -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
-#> v ggplot2 3.3.3     v purrr   0.3.4
-#> v tibble  3.0.5     v dplyr   1.0.3
-#> v tidyr   1.1.2     v stringr 1.4.0
-#> v readr   1.4.0     v forcats 0.5.0
+#> Warning: package 'tidyverse' was built under R version 4.0.5
+#> -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+#> v ggplot2 3.3.5     v purrr   0.3.4
+#> v tibble  3.1.6     v dplyr   1.0.7
+#> v tidyr   1.1.4     v stringr 1.4.0
+#> v readr   2.1.0     v forcats 0.5.1
+#> Warning: package 'ggplot2' was built under R version 4.0.5
+#> Warning: package 'tidyr' was built under R version 4.0.5
+#> Warning: package 'dplyr' was built under R version 4.0.5
+#> Warning: package 'forcats' was built under R version 4.0.5
 #> -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 #> x dplyr::filter() masks stats::filter()
 #> x dplyr::lag()    masks stats::lag()
@@ -92,6 +97,7 @@ library(VGAM)
 #library(readr)
 
 library(GGally)
+#> Warning: package 'GGally' was built under R version 4.0.5
 #> Registered S3 method overwritten by 'GGally':
 #>   method from   
 #>   +.gg   ggplot2
@@ -115,7 +121,7 @@ sibling  <- file.path(parent,sibfldnm)
 ```
 
 We have data presented on two tabs, “Master Data Record” and
-‘Removed-discontinued sites’. it’s not obvious why we would omit data
+‘Removed-discontinued sites’. It’s not obvious why we would omit data
 from a discontinued site. It depends on the underlying purpose.
 
 ``` r
@@ -302,7 +308,7 @@ xtabs(~ Site + Type, data = the_data)
 Matt Liebman of EPA requested graphics ordered by distance of each
 island from the Mainland (as he described it), and grouped or otherwise
 coded by Mainland vs. Island and dock vs. tidepool. We create factors to
-address that need
+address that need.
 
 ``` r
 the_data <- the_data %>%
@@ -421,23 +427,23 @@ the_data %>%
   select(-Date, -Type, -City, -Weather, -`Salinity`, 
          -Temp)
 #> # A tibble: 15 x 7
-#>    Site        Species           Abundance Comments          Month  Year Where  
-#>    <chr>       <chr>             <ord>     <chr>             <fct> <dbl> <chr>  
-#>  1 Siegel's R~ Botrylloides vio~ <NA>      No abundance rec~ Jul    2010 Mainla~
-#>  2 Siegel's R~ Carcinus maenas   <NA>      No abundance rec~ Jul    2010 Mainla~
-#>  3 SMCC Dock   Ascidiella asper~ <NA>      No abundance rec~ Jul    2010 Mainla~
-#>  4 SMCC Dock   Hemigrapsus sang~ <NA>      No abundance rec~ Jul    2010 Mainla~
-#>  5 Siegel's R~ Botrylloides vio~ <NA>      No abundance rec~ Aug    2010 Mainla~
-#>  6 Siegel's R~ Botryllus schlos~ <NA>      No abundance rec~ Aug    2010 Mainla~
-#>  7 Siegel's R~ Carcinus maenas   <NA>      No abundance rec~ Aug    2010 Mainla~
-#>  8 SMCC Dock   Ascidiella asper~ <NA>      No abundance rec~ Aug    2010 Mainla~
-#>  9 SMCC Dock   Botrylloides vio~ <NA>      No abundance rec~ Aug    2010 Mainla~
-#> 10 SMCC Dock   Botryllus schlos~ <NA>      No abundance rec~ Aug    2010 Mainla~
-#> 11 SMCC Dock   Carcinus maenas   <NA>      No abundance rec~ Aug    2010 Mainla~
-#> 12 Siegel's R~ Botryllus schlos~ <NA>      No abundance rec~ Sep    2010 Mainla~
-#> 13 Siegel's R~ Carcinus maenas   <NA>      No abundance rec~ Sep    2010 Mainla~
-#> 14 SMCC Dock   Botrylloides vio~ <NA>      No abundance rec~ Sep    2010 Mainla~
-#> 15 SMCC Dock   Botryllus schlos~ <NA>      No abundance rec~ Sep    2010 Mainla~
+#>    Site          Species                Abundance Comments     Month  Year Where
+#>    <chr>         <chr>                  <ord>     <chr>        <fct> <dbl> <chr>
+#>  1 Siegel's Reef Botrylloides violaceus <NA>      No abundanc~ Jul    2010 Main~
+#>  2 Siegel's Reef Carcinus maenas        <NA>      No abundanc~ Jul    2010 Main~
+#>  3 SMCC Dock     Ascidiella aspersa     <NA>      No abundanc~ Jul    2010 Main~
+#>  4 SMCC Dock     Hemigrapsus sanguineus <NA>      No abundanc~ Jul    2010 Main~
+#>  5 Siegel's Reef Botrylloides violaceus <NA>      No abundanc~ Aug    2010 Main~
+#>  6 Siegel's Reef Botryllus schlosseri   <NA>      No abundanc~ Aug    2010 Main~
+#>  7 Siegel's Reef Carcinus maenas        <NA>      No abundanc~ Aug    2010 Main~
+#>  8 SMCC Dock     Ascidiella aspersa     <NA>      No abundanc~ Aug    2010 Main~
+#>  9 SMCC Dock     Botrylloides violaceus <NA>      No abundanc~ Aug    2010 Main~
+#> 10 SMCC Dock     Botryllus schlosseri   <NA>      No abundanc~ Aug    2010 Main~
+#> 11 SMCC Dock     Carcinus maenas        <NA>      No abundanc~ Aug    2010 Main~
+#> 12 Siegel's Reef Botryllus schlosseri   <NA>      No abundanc~ Sep    2010 Main~
+#> 13 Siegel's Reef Carcinus maenas        <NA>      No abundanc~ Sep    2010 Main~
+#> 14 SMCC Dock     Botrylloides violaceus <NA>      No abundanc~ Sep    2010 Main~
+#> 15 SMCC Dock     Botryllus schlosseri   <NA>      No abundanc~ Sep    2010 Main~
 ```
 
 It appears that no data in 2010 was collected with abundance data. (At
@@ -532,12 +538,12 @@ the_data %>%
          -Temp, -Abundance) %>%
   arrange
 #> # A tibble: 4 x 6
-#>   Site          Species      Comments                        Month  Year Where  
-#>   <chr>         <chr>        <chr>                           <fct> <dbl> <chr>  
-#> 1 Siegel's Reef Membranipor~ The notes, show it to be absen~ Jul    2012 Mainla~
-#> 2 Chebeague St~ Didemnum ve~ Tunicates on trap only - none ~ Jul    2018 Chebea~
-#> 3 Great Diamon~ Botryllus s~ Not a dramatic tide (.8) with ~ Aug    2020 Great ~
-#> 4 Great Diamon~ Membranipor~ Not a dramatic tide (.8) with ~ Aug    2020 Great ~
+#>   Site                          Species              Comments  Month  Year Where
+#>   <chr>                         <chr>                <chr>     <fct> <dbl> <chr>
+#> 1 Siegel's Reef                 Membranipora sp.     The note~ Jul    2012 Main~
+#> 2 Chebeague Stone Pier          Didemnum vexillum    Tunicate~ Jul    2018 Cheb~
+#> 3 Great Diamond Island Tidepool Botryllus schlosseri Not a dr~ Aug    2020 Grea~
+#> 4 Great Diamond Island Tidepool Membranipora sp.     Not a dr~ Aug    2020 Grea~
 ```
 
 Based on the Comments, we believe we should retain each of these as
@@ -567,11 +573,11 @@ the_data %>%
   select(-Date, -Type, -City, -Weather, -Salinity, 
          -Temp, -Abundance)
 #> # A tibble: 3 x 6
-#>   Site         Species Comments                               Month  Year Where 
-#>   <chr>        <chr>   <chr>                                  <fct> <dbl> <chr> 
-#> 1 Chebeague S~ <NA>    Nothing to report. Native tunicates, ~ Jun    2015 Chebe~
-#> 2 SMCC Dock    <NA>    No critters. Dock recently pulled      Jun    2015 Mainl~
-#> 3 Peaks Dock   <NA>    Nothing found! Long blades of healthy~ May    2020 Peaks
+#>   Site                 Species Comments                       Month  Year Where 
+#>   <chr>                <chr>   <chr>                          <fct> <dbl> <chr> 
+#> 1 Chebeague Stone Pier <NA>    Nothing to report. Native tun~ Jun    2015 Chebe~
+#> 2 SMCC Dock            <NA>    No critters. Dock recently pu~ Jun    2015 Mainl~
+#> 3 Peaks Dock           <NA>    Nothing found! Long blades of~ May    2020 Peaks
 ```
 
 These records are all markers of an actual site visit that resulted in
@@ -597,17 +603,17 @@ the_data %>%
   pivot_longer( 6:24, names_to = "Species", values_to = "Count") %>%
   filter(Count > 1)
 #> # A tibble: 9 x 7
-#>   Date                Site            Month  Year Where   Species          Count
-#>   <dttm>              <chr>           <fct> <dbl> <chr>   <chr>            <int>
-#> 1 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Botrylloides vi~     2
-#> 2 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Botryllus schlo~     2
-#> 3 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Membranipora sp.     2
-#> 4 2013-07-12 00:00:00 Siegel's Reef   Jul    2013 Mainla~ Styela clava         2
-#> 5 2015-08-05 00:00:00 Chebeague Ston~ Aug    2015 Chebea~ Botrylloides vi~     2
-#> 6 2015-08-05 00:00:00 Chebeague Ston~ Aug    2015 Chebea~ Caprella mutica      2
-#> 7 2016-06-27 00:00:00 Peaks Tidepool  Jun    2016 Peaks   Botrylloides vi~     2
-#> 8 2016-06-27 00:00:00 Peaks Tidepool  Jun    2016 Peaks   Membranipora sp.     2
-#> 9 2016-06-27 00:00:00 Peaks Tidepool  Jun    2016 Peaks   Carcinus maenas      2
+#>   Date                Site                 Month  Year Where     Species   Count
+#>   <dttm>              <chr>                <fct> <dbl> <chr>     <chr>     <int>
+#> 1 2013-07-12 00:00:00 Siegel's Reef        Jul    2013 Mainland  Botryllo~     2
+#> 2 2013-07-12 00:00:00 Siegel's Reef        Jul    2013 Mainland  Botryllu~     2
+#> 3 2013-07-12 00:00:00 Siegel's Reef        Jul    2013 Mainland  Membrani~     2
+#> 4 2013-07-12 00:00:00 Siegel's Reef        Jul    2013 Mainland  Styela c~     2
+#> 5 2015-08-05 00:00:00 Chebeague Stone Pier Aug    2015 Chebeague Botryllo~     2
+#> 6 2015-08-05 00:00:00 Chebeague Stone Pier Aug    2015 Chebeague Caprella~     2
+#> 7 2016-06-27 00:00:00 Peaks Tidepool       Jun    2016 Peaks     Botryllo~     2
+#> 8 2016-06-27 00:00:00 Peaks Tidepool       Jun    2016 Peaks     Membrani~     2
+#> 9 2016-06-27 00:00:00 Peaks Tidepool       Jun    2016 Peaks     Carcinus~     2
 ```
 
 ### First Duplicate Field Record
@@ -639,9 +645,9 @@ wording of Weather and different temperatures. That suggests two
 different observers. Different temperatures suggest different times of
 day, or different thermometers, not well calibrated.
 
-One observer (?) noted Green Crab, the other did not. perhaps a trainer
-and a trainee. The abundance data differs in several places by one
-abundance class.
+One observer (?) noted Green Crab, the other did not. Perhaps one was a
+a trainer and the other was a trainee. The abundance data differs in
+several places by one abundance class.
 
 We judge it is better to select the sample that observed the green crab,
 as most of our analyses will be based on presence/absence.
@@ -822,7 +828,7 @@ chose to pursue them.
 Note that this procedure retains any “real” NAs in the Abundance data,
 while it fills in values not present in the draft long data with
 “Absent”. This means we do not count data where species were recorded as
-“present”, which is probematic. A decision needs t be made on each
+“present”, which is problematic. A decision needs t be made on each
 specific analysis of the relative abundance data whether to replace
 those NAs with “Absent” or not.
 

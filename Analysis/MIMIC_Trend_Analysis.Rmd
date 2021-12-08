@@ -1,5 +1,5 @@
 ---
-title: "Examination of Trendsin MIMIC Invasive Species Data"
+title: "Examination of Trends in MIMIC Invasive Species Data"
 author: "Curtis C. Bohlen, Casco Bay Estuary Partnership"
 date: "3/12/2021"
 output:
@@ -201,7 +201,7 @@ presence_data <- presence_data %>%
 ```
 
 #  Analyzing Sampling Effort
-Lets look at distribution of EFFORT by sites and years.
+Let's look at distribution of EFFORT by sites and years.
 ```{r}
 site_visits <- presence_data %>%
   group_by(Site, Year, Month) %>%
@@ -255,7 +255,7 @@ parallel analyses, using both data from the two sites tracked long enough to
 examine trends and all data from all sites. 
 
 
-# Analysis Pricipals
+# Analysis Principles
 We have to be a bit careful here about interpreting these data, because of 
 varying annual effort. We need to make sure we are scaling analyses by effort.
 We will consider a unit of effort to be the combination of a site and a month of 
@@ -318,11 +318,10 @@ two long-term sites:
 A few of the other sites may also provide significant changes in abundance, but 
 it looks unlikely.
 
-We are aware that the Palaemon was not searched for in the first few years of the
-program, but it was not found anywhere in New England until a few years 
-ago, so that is unlikely to be a problem. A  few other species were also added
-to the program over the period of record, as they because mroe abundant in 
-New England.
+We are aware that the *Palaemon* was not searched for in the first few years of
+the program, but it was not found anywhere in New England until a few years ago,
+so that is unlikely to be a problem. A  few other species were also added to the
+program over the period of record, as they became more abundant in New England.
 
 ### Binomial Models
 We fit a binomial model for each species independently.
@@ -335,8 +334,6 @@ summary(test_glm)
 ```
 So that suggests the probability of Observing *Styela* has increased.
 
-
-
 ```{r}
 test_glm <- glm(Present ~ Year, family = binomial(), 
                 data = presence_data, subset = Species == 'Caprella mutica')
@@ -344,10 +341,10 @@ as_tibble(summary(test_glm)$coefficients)
 ```
 That also suggests the probability of observing *Caprella* has increased.
 
-
 We can abuse the `emmeans()` function slightly to generate predicted 
-probabilities of observing *Caprella* on a ny give nsite visit at one of these
+probabilities of observing *Caprella* on any given site visit at one of these
 two sites.
+
 ```{r}
 emms <- emmeans(test_glm, 'Year', at = list(Year = 2008:2020), type = 'response')
 plot(emms) +
@@ -386,9 +383,7 @@ for (s in nested_presence$Species) {
   print(s)
   print(nested_presence$glm_coef[nested_presence$Species == s][[1]])
 }
-  
 ```
-
 
 ```{r}
 for (s in nested_presence$Species) {
@@ -406,7 +401,6 @@ for (s in nested_presence$Species) {
     cat('\n')
   }
 }
-  
 ```
 
 A few of those are suspect analyses, as data are extremely limited
@@ -476,7 +470,6 @@ tmp <- tmp %>%
 tmp
 ```
 
-
 ```{r fig.width = 9, fig.height = 6}
   ggplot(tmp, aes(Year, fill = Abundance)) +
   geom_col(aes(y = Frequency)) +
@@ -488,8 +481,6 @@ tmp
   
   theme_cbep(base_size = 12) +
   theme(strip.text = element_text(size = 7))
-
-
 ```
 
 # Multinomial Models
@@ -514,19 +505,18 @@ coef(test.vglm)[3]
 ```{r}
 (t <- lrtest(test.vglm))
 ```
+
 ```{r}
 t@Body
 ```
 
 ```{r}
 t@Body$`Pr(>Chisq)`[2]
-
 ```
 
 I  ran into problems calling  `lrtest()` from within the nested tibble, so we 
 return to pulling significnace tests for the coefficients from the model 
 summary.
-
 
 ```{r}
 summary(test.vglm)@coef3
@@ -535,7 +525,6 @@ summary(test.vglm)@coef3
 ```{r}
 summary(test.vglm)@coef3['Year', 'Pr(>|z|)']
 ```
-
 
 #### Construct Nested Tibble
 ```{r}
@@ -564,7 +553,6 @@ nested_abundance <- nested_abundance %>%
                           function(mod) summary(mod)@coef3['Year', 'Pr(>|z|)']))
 ```
 
-
 #### Examine Results
 ```{r}
 for (s in nested_abundance$Species) {
@@ -573,7 +561,6 @@ for (s in nested_abundance$Species) {
   row <- nested_abundance[nested_abundance$Species == s,]
   print(paste('Slope:', row$vglm_slope, 'p:', row$vglm_p))
 }
-  
 ```
 
 ## Table of Results
@@ -600,8 +587,6 @@ cbind(nested_presence$glm_slope, nested_abundance$vglm_slope)
 ```
 The slopes are sometimes identical -- probably when there were only two 
 categories of abundance recorded (effectively present and absent, regardless of\
-the nominal abundance).  however, that is not always the case, so these two
+the nominal abundance). However, that is not always the case, so these two
 analyses are based on slightly different information, but returning functionally
 similar results.
-
-

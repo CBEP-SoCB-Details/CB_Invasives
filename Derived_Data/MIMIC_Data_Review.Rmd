@@ -65,7 +65,7 @@ sibling  <- file.path(parent,sibfldnm)
 ```
 
 We have data presented on two tabs, "Master Data Record" and 
-'Removed-discontinued sites'.  it's not obvious why we would omit data from a
+'Removed-discontinued sites'.  It's not obvious why we would omit data from a
 discontinued site.  It depends on the underlying purpose.
 ```{r}
 fn <- 'MIMIC_MASTER_DATA_Wells_022521.xls'
@@ -193,7 +193,7 @@ xtabs(~ Site + Type, data = the_data)
 ## Convert Sites to a Factor
 Matt Liebman of EPA requested graphics ordered by distance of each island from
 the Mainland (as he described it), and grouped or otherwise coded by Mainland
-vs. Island and dock vs. tidepool. We create factors to address that need
+vs. Island and dock vs. tidepool. We create factors to address that need.
 ```{r}
 the_data <- the_data %>%
   mutate(Site = factor(Site, levels = 
@@ -250,7 +250,6 @@ the_data <- the_data %>%
   left_join(translator , by = 'Site')
 ```
 
-
 ## Handling "Missing" Abundance Data
 There is no reason why data should have been collected without related abundance
 information, if all protocols were being followed.  Here we look more closely at
@@ -275,7 +274,6 @@ the_data %>%
   group_by(Site, Year) %>%
   summarize(missed = any(is.na(Abundance)),
             count_missed  = sum(is.na(Abundance)))
-  
 ```
 
 ### Checking Missing Data 
@@ -399,9 +397,9 @@ Weather and different temperatures.  That suggests two different observers.
 Different temperatures suggest different times of day, or different
 thermometers, not well calibrated.
 
-One observer (?) noted Green Crab, the other did not.   perhaps
-a trainer and a trainee.  The abundance data differs in several places
-by one abundance class.
+One observer (?) noted Green Crab, the other did not. Perhaps one was a a
+trainer and the other was a trainee.  The abundance data differs in several
+places by one abundance class.
 
 We judge it is better to select the sample that  observed the green crab, as 
 most of our analyses will be based on presence/absence.
@@ -522,11 +520,11 @@ The easiest way to build complete data is to pivot data to wide form, replace
 NAs, and pivot back to long form.  The wide form data would be useful for
 ordination and other multivariate procedures, if we chose to pursue them.
 
-Note that this procedure retains any "real" NAs in the Abundance data, while it 
-fills in values not present in the draft long data with "Absent".  This means we 
-do not count data where species were recorded as "present", which is probematic.
-A decision needs t be made on each specific analysis of the relative abundance
-data whether to replace those NAs with "Absent" or not.
+Note that this procedure retains any "real" NAs in the Abundance data, while it
+fills in values not present in the draft long data with "Absent".  This means we
+do not count data where species were recorded as "present", which is
+problematic. A decision needs t be made on each specific analysis of the
+relative abundance data whether to replace those NAs with "Absent" or not.
 
 ## Pivot to "Wide" Data Format
 ```{r}
@@ -548,8 +546,6 @@ abundance_data_wide <- the_data %>%
               values_from = Abundance,
               values_fill = 'Absent'
               )
-
-
 ```
 
 
